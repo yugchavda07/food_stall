@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Stall - Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="home2.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Food Stall</div>
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+            <span class="cart-count">0</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="categories">
+            <button class="category-btn active" data-category="all">All Items</button>
+            <button class="category-btn" data-category="starters">Starters</button>
+            <button class="category-btn" data-category="main">Main Course</button>
+            <button class="category-btn" data-category="desserts">Desserts</button>
+            <button class="category-btn" data-category="beverages">Beverages</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            <!-- Menu items will be populated here -->
+        </div>
+    </main>
+
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button onclick="toggleCart()" style="border: none; background: none; cursor: pointer;">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="special-instructions">
+            <label for="specialInstructions">Special Instructions</label>
+            <textarea id="specialInstructions" placeholder="Any special requests or dietary requirements?"></textarea>
+        </div>
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">₹0</span>
+            </div>
+            <div class="summary-row">
+                <span>Tax (5%)</span>
+                <span id="tax">₹0</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <button class="checkout-btn" onclick="placeOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="home2.js"></script>
+</body>
+</html>

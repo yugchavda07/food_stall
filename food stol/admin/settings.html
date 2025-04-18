@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Food Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #3B82F6;
+            --secondary-color: #10B981;
+            --dark-color: #1F2937;
+            --light-color: #F3F4F6;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --info-color: #3B82F6;
+            --gray-color: #6B7280;
+            --card-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            --border-color: #E5E7EB;
+            --sidebar-width: 250px;
+            --sidebar-mobile-width: 70px;
+            --sidebar-dark: #292F36;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #F9FAFB;
+            color: var(--dark-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-dark);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item span {
+            font-weight: 500;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
+            background-color: #F9FAFB;
+            transition: all 0.3s;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            letter-spacing: -0.5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .settings-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .settings-nav {
+            background: var(--light-color);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .settings-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .settings-nav-item {
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: var(--gray-color);
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            flex: 0 0 auto;
+        }
+
+        .settings-nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .settings-nav-item.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .settings-content {
+            padding: 2rem;
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .settings-group {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-group h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group .hint {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-slider {
+            width: 48px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch input[type="checkbox"]:checked + .toggle-slider {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch input[type="checkbox"]:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #60A5FA);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light-color);
+            color: var(--gray-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .color-option.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: var(--sidebar-mobile-width);
+            }
+
+            .sidebar-header h3, 
+            .menu-item span {
+                display: none;
+            }
+
+            .menu-item {
+                padding: 15px;
+                justify-content: center;
+            }
+
+            .menu-item i {
+                margin-right: 0;
+                font-size: 1.5rem;
+                width: auto;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-mobile-width);
+                width: calc(100% - var(--sidebar-mobile-width));
+                padding: 1rem;
+            }
+
+            .header {
+                margin-top: 1rem;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .settings-nav {
+                padding: 1rem;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .settings-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .settings-content {
+                padding: 1rem;
+            }
+
+            .settings-group {
+                padding: 1rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--light-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Settings</h1>
+            
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-nav">
+                <div class="settings-nav-item active" data-tab="general">General</div>
+                <div class="settings-nav-item" data-tab="dashboard">Dashboard</div>
+                <div class="settings-nav-item" data-tab="order-status">Order Status</div>
+                <div class="settings-nav-item" data-tab="qr-settings">QR Settings</div>
+                <div class="settings-nav-item" data-tab="analytics">Analytics</div>
+                <div class="settings-nav-item" data-tab="appearance">Appearance</div>
+                <div class="settings-nav-item" data-tab="notifications">Notifications</div>
+                <div class="settings-nav-item" data-tab="security">Security</div>
+                <div class="settings-nav-item" data-tab="integrations">Integrations</div>
+            </div>
+
+            <div class="settings-content">
+                <!-- General Settings Section -->
+                <div class="settings-section active" id="general">
+                    <div class="settings-group">
+                        <h3>Restaurant Information</h3>
+                        <div class="form-group">
+                            <label>Restaurant Name</label>
+                            <input type="text" value="Food Restaurant">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" value="contact@foodrestaurant.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" value="+91 98765 43210">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea>123 Main Street, City, State, 12345</textarea>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Business Hours</h3>
+                        <div class="form-group">
+                            <label>Opening Time</label>
+                            <input type="text" value="10:00 AM">
+                        </div>
+                        <div class="form-group">
+                            <label>Closing Time</label>
+                            <input type="text" value="10:00 PM">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Settings Section -->
+                <div class="settings-section" id="dashboard">
+                    <div class="settings-group">
+                        <h3>Dashboard Layout</h3>
+                        <div class="form-group">
+                            <label>Default View</label>
+                            <select>
+                                <option>Daily Overview</option>
+                                <option>Weekly Overview</option>
+                                <option>Monthly Overview</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="showRevenueWidget" checked>
+                                <label class="toggle-slider" for="showRevenueWidget"></label>
+                                <span>Show Revenue Widget</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="showOrdersWidget" checked>
+                                <label class="toggle-slider" for="showOrdersWidget"></label>
+                                <span>Show Orders Widget</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="showCustomersWidget" checked>
+                                <label class="toggle-slider" for="showCustomersWidget"></label>
+                                <span>Show Customers Widget</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="showPopularItems" checked>
+                                <label class="toggle-slider" for="showPopularItems"></label>
+                                <span>Show Popular Items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Status Section -->
+                <div class="settings-section" id="order-status">
+                    <div class="settings-group">
+                        <h3>Customize Order Status Flow</h3>
+                        <p class="hint">Drag and drop to reorder statuses or toggle to show/hide</p>
+                        
+                        <div class="order-status-list">
+                            <div class="order-status-item">
+                                <i class="fas fa-grip-vertical drag-handle"></i>
+                                <div class="order-status-color" style="background: #fbbf24"></div>
+                                <div class="order-status-info">
+                                    <input type="text" value="Accepted Order" style="border: none; background: transparent;">
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="status1" checked>
+                                    <label class="toggle-slider" for="status1"></label>
+                                </div>
+                            </div>
+
+                            <div class="order-status-item">
+                                <i class="fas fa-grip-vertical drag-handle"></i>
+                                <div class="order-status-color" style="background: #60a5fa"></div>
+                                <div class="order-status-info">
+                                    <input type="text" value="Preparing Your Order" style="border: none; background: transparent;">
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="status2" checked>
+                                    <label class="toggle-slider" for="status2"></label>
+                                </div>
+                            </div>
+
+                            <div class="order-status-item">
+                                <i class="fas fa-grip-vertical drag-handle"></i>
+                                <div class="order-status-color" style="background: #34d399"></div>
+                                <div class="order-status-info">
+                                    <input type="text" value="Ready" style="border: none; background: transparent;">
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="status3" checked>
+                                    <label class="toggle-slider" for="status3"></label>
+                                </div>
+                            </div>
+
+                            <div class="order-status-item">
+                                <i class="fas fa-grip-vertical drag-handle"></i>
+                                <div class="order-status-color" style="background: #8b5cf6"></div>
+                                <div class="order-status-info">
+                                    <input type="text" value="Completed" style="border: none; background: transparent;">
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="status4" checked>
+                                    <label class="toggle-slider" for="status4"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <button class="btn btn-secondary" id="addNewStatus">
+                                <i class="fas fa-plus"></i> Add New Status
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Settings Section -->
+                <div class="settings-section" id="qr-settings">
+                    <div class="settings-group">
+                        <h3>QR Code Settings</h3>
+                        
+                        <div class="form-group">
+                            <label>QR Code Type</label>
+                            <div class="qr-options">
+                                <div class="qr-option-card active" data-type="table">
+                                    <i class="fas fa-chair"></i>
+                                    <h4>Table QR Codes</h4>
+                                    <p>Generate unique QR codes for each table</p>
+                                </div>
+                                <div class="qr-option-card" data-type="menu">
+                                    <i class="fas fa-utensils"></i>
+                                    <h4>Menu QR Code</h4>
+                                    <p>Generate a single QR code for your menu</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>QR Code Style</label>
+                            <select id="qrStyle">
+                                <option value="standard">Standard</option>
+                                <option value="rounded">Rounded</option>
+                                <option value="dots">Dots</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Primary Color</label>
+                            <input type="color" id="qrColor" value="#000000">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Background Color</label>
+                            <input type="color" id="qrBgColor" value="#FFFFFF">
+                        </div>
+
+                        <div class="form-group">
+                            <label>QR Code Preview</label>
+                            <div class="qr-preview">
+                                <i class="fas fa-qrcode fa-3x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Settings Section -->
+                <div class="settings-section" id="analytics">
+                    <div class="settings-group">
+                        <h3>Analytics Dashboard Preferences</h3>
+                        <p class="hint">Choose which metrics to display on your analytics dashboard</p>
+
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="revenue" checked>
+                                    <label class="toggle-slider" for="revenue"></label>
+                                    <span>Revenue Analytics</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="orders" checked>
+                                    <label class="toggle-slider" for="orders"></label>
+                                    <span>Order Analytics</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="customers" checked>
+                                    <label class="toggle-slider" for="customers"></label>
+                                    <span>Customer Analytics</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="items" checked>
+                                    <label class="toggle-slider" for="items"></label>
+                                    <span>Popular Items</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="peak-hours" checked>
+                                    <label class="toggle-slider" for="peak-hours"></label>
+                                    <span>Peak Hours</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="feedback" checked>
+                                    <label class="toggle-slider" for="feedback"></label>
+                                    <span>Customer Feedback</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="sales-by-category" checked>
+                                    <label class="toggle-slider" for="sales-by-category"></label>
+                                    <span>Sales by Category</span>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="payment-methods" checked>
+                                    <label class="toggle-slider" for="payment-methods"></label>
+                                    <span>Payment Methods</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Data Visualization</h3>
+                        <div class="form-group">
+                            <label>Default Chart Type</label>
+                            <select>
+                                <option>Bar Chart</option>
+                                <option>Line Chart</option>
+                                <option>Pie Chart</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Default Time Period</label>
+                            <select>
+                                <option>Today</option>
+                                <option>This Week</option>
+                                <option>This Month</option>
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div class="settings-section" id="appearance">
+                    <div class="settings-group">
+                        <h3>Theme</h3>
+                        <div class="form-group">
+                            <label>Color Scheme</label>
+                            <div class="color-picker">
+                                <div class="color-option active" style="background: #4f46e5"></div>
+                                <div class="color-option" style="background: #16a34a"></div>
+                                <div class="color-option" style="background: #ea580c"></div>
+                                <div class="color-option" style="background: #dc2626"></div>
+                                <div class="color-option" style="background: #8b5cf6"></div>
+                                <div class="color-option" style="background: #0ea5e9"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="darkMode">
+                                <label class="toggle-slider" for="darkMode"></label>
+                                <span>Dark Mode</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Layout</h3>
+                        <div class="form-group">
+                            <label>Menu Layout</label>
+                            <select>
+                                <option>Grid View</option>
+                                <option>List View</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div class="settings-section" id="notifications">
+                    <div class="settings-group">
+                        <h3>Email Notifications</h3>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="newOrderEmail" checked>
+                                <label class="toggle-slider" for="newOrderEmail"></label>
+                                <span>New Order</span>
+                            </div>
+                            <div class="form-text">Receive email when a new order is placed</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="orderStatusEmail">
+                                <label class="toggle-slider" for="orderStatusEmail"></label>
+                                <span>Order Status</span>
+                            </div>
+                            <div class="form-text">Receive email when order status changes</div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Push Notifications</h3>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="newOrderPush" checked>
+                                <label class="toggle-slider" for="newOrderPush"></label>
+                                <span>New Order Alert</span>
+                            </div>
+                            <div class="form-text">Receive push notification for new orders</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="settings-section" id="security">
+                    <div class="settings-group">
+                        <h3>Password</h3>
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Two-Factor Authentication</h3>
+                        <div class="form-group">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="twoFactor">
+                                <label class="toggle-slider" for="twoFactor"></label>
+                                <span>Enable Two-Factor Authentication</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integrations Settings -->
+                <div class="settings-section" id="integrations">
+                    <div class="settings-group">
+                        <h3>Payment Gateway</h3>
+                        <div class="form-group">
+                            <label>Payment Provider</label>
+                            <select>
+                                <option>Stripe</option>
+                                <option>PayPal</option>
+                                <option>Razorpay</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="text" placeholder="Enter API key">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>SMS Gateway</h3>
+                        <div class="form-group">
+                            <label>SMS Provider</label>
+                            <select>
+                                <option>Twilio</option>
+                                <option>MessageBird</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="text" placeholder="Enter API key">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <button class="btn btn-secondary" onclick="resetSettings()">
+                <i class="fas fa-undo"></i> Reset to Default
+            </button>
+        </div>
+    </div>
+
+    <div class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+           fetch('asidebar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading sidebar:', error));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize settings functionality
+            initializeSettings();
+        });
+
+        // Initialize all settings functionality
+        function initializeSettings() {
+            // Tab switching
+            initializeTabSwitching();
+
+            // Order status functionality
+            initializeOrderStatus();
+
+            // QR code settings
+            initializeQRSettings();
+
+            // Color picker functionality
+            initializeColorPicker();
+
+            // Dark mode toggle
+            initializeDarkMode();
+        }
+
+        // Initialize tab switching functionality
+        function initializeTabSwitching() {
+            document.querySelectorAll('.settings-nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+                    document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+                    
+                    item.classList.add('active');
+                    document.getElementById(item.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        // Initialize order status functionality
+        function initializeOrderStatus() {
+            const orderStatusList = document.querySelector('.order-status-list');
+            new Sortable(orderStatusList, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost'
+            });
+
+            // Add new status button functionality
+            document.getElementById('addNewStatus').addEventListener('click', addNewOrderStatus);
+        }
+
+        // Add new order status
+        function addNewOrderStatus() {
+            const newStatusItem = document.createElement('div');
+            newStatusItem.className = 'order-status-item';
+            const statusId = 'status' + (document.querySelectorAll('.order-status-item').length + 1);
+            
+            newStatusItem.innerHTML = `
+                <i class="fas fa-grip-vertical drag-handle"></i>
+                <div class="order-status-color" style="background: #94a3b8"></div>
+                <div class="order-status-info">
+                    <input type="text" value="New Status" style="border: none; background: transparent;">
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="${statusId}" checked>
+                    <label class="toggle-slider" for="${statusId}"></label>
+                </div>
+            `;
+            
+            document.querySelector('.order-status-list').appendChild(newStatusItem);
+        }
+
+        // Initialize QR code settings
+        function initializeQRSettings() {
+            document.querySelectorAll('.qr-option-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.qr-option-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                });
+            });
+        }
+
+        // Initialize color picker functionality
+        function initializeColorPicker() {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    option.classList.add('active');
+                    // Update theme color
+                    document.documentElement.style.setProperty('--primary-color', option.style.background);
+                });
+            });
+        }
+
+        // Initialize dark mode functionality
+        function initializeDarkMode() {
+            const darkModeToggle = document.getElementById('darkMode');
+            darkModeToggle.addEventListener('change', () => {
+                document.body.classList.toggle('dark-mode');
+            });
+        }
+
+        // Save settings
+        function saveSettings() {
+            // Collect all settings values
+            const settings = {
+                general: collectGeneralSettings(),
+                dashboard: collectDashboardSettings(),
+                orderStatus: collectOrderStatusSettings(),
+                qrSettings: collectQRSettings(),
+                analytics: collectAnalyticsSettings(),
+                appearance: collectAppearanceSettings(),
+                notifications: collectNotificationSettings(),
+                security: collectSecuritySettings(),
+                integrations: collectIntegrationSettings()
+            };
+
+            // Save settings to localStorage or send to server
+            localStorage.setItem('adminSettings', JSON.stringify(settings));
+            alert('Settings saved successfully!');
+        }
+
+        // Reset settings
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to default?')) {
+                // Clear saved settings
+                localStorage.removeItem('adminSettings');
+                // Reload page to reset all inputs to default
+                window.location.reload();
+            }
+        }
+
+        // Helper functions to collect settings from each section
+        function collectGeneralSettings() {
+            return {
+                restaurantName: document.querySelector('input[value="Food Restaurant"]').value,
+                email: document.querySelector('input[type="email"]').value,
+                phone: document.querySelector('input[value="+91 98765 43210"]').value,
+                address: document.querySelector('textarea').value,
+                openingTime: document.querySelector('input[value="10:00 AM"]').value,
+                closingTime: document.querySelector('input[value="10:00 PM"]').value
+            };
+        }
+
+        function collectDashboardSettings() {
+            return {
+                defaultView: document.querySelector('#dashboard select').value,
+                showRevenue: document.querySelector('#showRevenueWidget').checked,
+                showOrders: document.querySelector('#showOrdersWidget').checked,
+                showCustomers: document.querySelector('#showCustomersWidget').checked,
+                showPopularItems: document.querySelector('#showPopularItems').checked
+            };
+        }
+
+        // Add similar collection functions for other sections
+        function collectOrderStatusSettings() {
+            // Implement order status collection
+            return {};
+        }
+
+        function collectQRSettings() {
+            // Implement QR settings collection
+            return {};
+        }
+
+        function collectAnalyticsSettings() {
+            // Implement analytics settings collection
+            return {};
+        }
+
+        function collectAppearanceSettings() {
+            // Implement appearance settings collection
+            return {};
+        }
+
+        function collectNotificationSettings() {
+            // Implement notification settings collection
+            return {};
+        }
+
+        function collectSecuritySettings() {
+            // Implement security settings collection
+            return {};
+        }
+
+        function collectIntegrationSettings() {
+            // Implement integration settings collection
+            return {};
+        }
+    </script>
+</body>
+</html>

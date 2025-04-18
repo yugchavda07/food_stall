@@ -1,0 +1,631 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #22c55e;
+    --background-color: #f8fafc;
+    --card-background: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.welcome-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.welcome-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.welcome-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.welcome-section p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+}
+
+/* Login Options */
+.login-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.login-card {
+    background: var(--card-background);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.card-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.login-card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+}
+
+/* Form Styles */
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.remember-forgot label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Button Styles */
+.login-btn, .portal-btn, .vendor-btn, .back-to-user a {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.login-btn, .portal-btn {
+    width: 100%;
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.login-btn:hover, .portal-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.login-btn:active, .portal-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.vendor-btn {
+    background: var(--card-background);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.vendor-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+.vendor-btn:active {
+    transform: translateX(2px);
+}
+
+.vendor-btn i {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+.vendor-btn:hover i {
+    color: white;
+}
+
+.back-to-user a {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+}
+
+.back-to-user a:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+.back-to-user a:active {
+    transform: translateY(0);
+}
+
+/* Button Loading State */
+.login-btn.loading, .portal-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.login-btn.loading::after, .portal-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: button-loading 0.8s linear infinite;
+}
+
+@keyframes button-loading {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Button Disabled State */
+.login-btn:disabled, .portal-btn:disabled, .vendor-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Button Focus State */
+.login-btn:focus, .portal-btn:focus, .vendor-btn:focus, .back-to-user a:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* Button Icon Animation */
+.login-btn i, .portal-btn i, .vendor-btn i, .back-to-user a i {
+    transition: transform 0.3s ease;
+}
+
+.login-btn:hover i, .portal-btn:hover i, .vendor-btn:hover i, .back-to-user a:hover i {
+    transform: translateX(2px);
+}
+
+/* Remove old button styles */
+.login-btn, .portal-btn, .vendor-btn, .back-to-user a {
+    margin: 0;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.register-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Vendor Portal */
+.vendor-portal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.portal-card {
+    background: var(--card-background);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-content {
+    padding: 2rem;
+}
+
+.card-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.card-content p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.card-features {
+    margin-bottom: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(5px);
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon i {
+    font-size: 1.25rem;
+    color: white;
+}
+
+.feature-item span {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.portal-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.portal-btn:hover {
+    background: var(--primary-dark);
+}
+
+.back-to-user {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.back-to-user a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.back-to-user a:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .welcome-section h1 {
+        font-size: 2rem;
+    }
+
+    .welcome-section p {
+        font-size: 1rem;
+    }
+
+    .login-options,
+    .vendor-portal {
+        grid-template-columns: 1fr;
+    }
+
+    .login-card,
+    .portal-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Registration Page Styles */
+.registration-card {
+    background: var(--card-background);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-step {
+    transition: all 0.3s ease;
+}
+
+.password-requirements {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 0.5rem;
+}
+
+.password-requirements p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.password-requirements ul {
+    list-style: none;
+    padding: 0;
+}
+
+.password-requirements li {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.50rem;
+}
+
+.password-requirements li::before {
+    content: "×";
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.password-requirements li.valid::before {
+    content: "✓";
+    color: var(--success-color);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: var(--primary-color);
+}
+
+.otp-section {
+    margin-top: 1.5rem;
+}
+
+.otp-timer {
+    text-align: right;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.next-btn, .back-btn, .send-otp-btn, .verify-btn, .submit-btn {
+    flex: 1;
+    padding: 0.875rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.next-btn, .verify-btn, .submit-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.back-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.send-otp-btn {
+    background: var(--success-color);
+    color: white;
+}
+
+.next-btn:hover, .verify-btn:hover, .submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+.back-btn:hover {
+    background: var(--background-color);
+    transform: translateY(-2px);
+}
+
+.send-otp-btn:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(34, 197, 94, 0.2);
+}
+
+.next-btn:active, .verify-btn:active, .submit-btn:active,
+.back-btn:active, .send-otp-btn:active {
+    transform: translateY(0);
+}
+
+/* Input validation styles */
+.input-group input:invalid {
+    border-color: #ef4444;
+}
+
+.input-group input:valid {
+    border-color: var(--success-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .registration-card {
+        padding: 1.5rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .next-btn, .back-btn, .send-otp-btn, .verify-btn, .submit-btn {
+        width: 100%;
+    }
+} 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management - Food Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="menu_management.css">
+    <!-- Toast Notification Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Menu Management</h1>
+            <div class="header-actions">
+                <button class="btn-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search items...">
+                </button>
+                <button class="btn-add" onclick="openAddItemModal()">
+                    <i class="fas fa-plus"></i>
+                    Add New Item
+                </button>
+            </div>
+        </div>
+
+        <div class="menu-categories">
+            <button class="category-btn active" data-category="all">All Items</button>
+            <button class="category-btn" data-category="main">Main Course</button>
+            <button class="category-btn" data-category="appetizers">Appetizers</button>
+            <button class="category-btn" data-category="desserts">Desserts</button>
+            <button class="category-btn" data-category="beverages">Beverages</button>
+            <button class="category-btn" data-category="starters">Starters</button>
+        </div>
+
+        <div class="menu-grid">
+            <!-- Menu items will be dynamically added here -->
+        </div>
+
+        <!-- Add/Edit Item Modal -->
+        <div class="modal" id="itemModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add New Item</h2>
+                    <button class="close-modal" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Tab Navigation -->
+                <div class="modal-tabs">
+                    <button class="modal-tab active" data-tab="basic-info">
+                        <i class="fas fa-info-circle"></i> Basic Info
+                    </button>
+                    <button class="modal-tab" data-tab="variations">
+                        <i class="fas fa-layer-group"></i> Variations
+                    </button>
+                    <button class="modal-tab" data-tab="advanced">
+                        <i class="fas fa-sliders-h"></i> Advanced
+                    </button>
+                </div>
+                
+                <form id="itemForm" class="modal-form">
+                    <!-- Basic Info Tab -->
+                    <div class="tab-content active" id="basic-info-tab">
+                        <div class="form-group">
+                            <label for="itemName">Item Name</label>
+                            <input type="text" id="itemName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemCategory">Category</label>
+                            <select id="itemCategory" required>
+                                <option value="main">Main Course</option>
+                                <option value="appetizers">Appetizers</option>
+                                <option value="desserts">Desserts</option>
+                                <option value="beverages">Beverages</option>
+                                <option value="starters">Starters</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemPrice">Price (₹)</label>
+                            <input type="number" id="itemPrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemDescription">Description</label>
+                            <textarea id="itemDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemImage">Image URL</label>
+                            <input type="url" id="itemImage">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="itemStatus">
+                                <option value="available">Available</option>
+                                <option value="out_of_stock">Out of Stock</option>
+                                <option value="coming_soon">Coming Soon</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Variations Tab -->
+                    <div class="tab-content" id="variations-tab">
+                        <div class="form-group">
+                            <label>Item Variations</label>
+                            <p class="form-help">Add different sizes, portions or variants with their respective prices</p>
+                            <div id="variations-container">
+                                <div class="variation-row">
+                                    <input type="text" placeholder="Variation Name" class="variation-name">
+                                    <input type="number" placeholder="Price" class="variation-price">
+                                    <button type="button" class="btn-remove-variation">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-variation">
+                                <i class="fas fa-plus"></i> Add Variation
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Tab -->
+                    <div class="tab-content" id="advanced-tab">
+                        <div class="form-group">
+                            <label for="itemTags">Tags (comma separated)</label>
+                            <input type="text" id="itemTags" placeholder="e.g. spicy, popular, new">
+                            <p class="form-help">Tags help customers find items and can be used for filtering</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="prepTime">Preparation Time (minutes)</label>
+                            <input type="number" id="prepTime" min="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="calories">Calories</label>
+                            <input type="number" id="calories" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Dietary Information</label>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="vegetarian">
+                                    Vegetarian
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="vegan">
+                                    Vegan
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="glutenFree">
+                                    Gluten Free
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn-save">Save Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load the sidebar
+        fetch('asidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading sidebar:', error));
+    </script>
+
+    <script src="menu_management.js"></script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - Food Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --dark-color: #292F36;
+            --light-color: #F7FFF7;
+            --danger-color: #FF6B6B;
+            --success-color: #6BCB77;
+            --warning-color: #FFD166;
+            --info-color: #4ECDC4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .filter-group select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 8px 15px 8px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        /* Orders Grid */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .order-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .order-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+
+        .status-preparing {
+            background-color: #D1ECF1;
+            color: #0C5460;
+        }
+
+        .status-ready {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+
+        .status-completed {
+            background-color: #E2E3E5;
+            color: #383D41;
+        }
+
+        .order-content {
+            padding: 15px;
+        }
+
+        .order-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .order-meta div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .order-items {
+            margin: 15px 0;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-quantity {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        .order-actions {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff5252;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #5cb85c;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .timer.urgent {
+            color: var(--danger-color);
+        }
+
+        .timer.warning {
+            color: var(--warning-color);
+        }
+
+        .timer.normal {
+            color: var(--info-color);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateY(150%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .notification-message {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-header h3, .menu-item span {
+                display: none;
+            }
+
+            .menu-item i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Orders</h1>
+           
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search orders by ID, customer, or items..." onkeyup="searchOrders(this.value)">
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <select onchange="filterOrders('status', this.value)">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="ready">Ready</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Date:</label>
+                <select onchange="filterOrders('date', this.value)">
+                    <option value="all">All Time</option>
+                    <option value="today" selected>Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="orders-grid" id="ordersContainer">
+            <!-- Orders will be populated here -->
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">Success</div>
+            <div class="notification-message">Order status has been updated successfully.</div>
+        </div>
+    </div>
+
+    <script>
+           fetch('asidebar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading sidebar:', error));
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        // Sample orders data
+        const orders = [
+            {
+                id: 'ORD001',
+                table: 'Table 5',
+                status: 'pending',
+                items: [
+                    { name: 'Butter Chicken', quantity: 1, price: 350 },
+                    { name: 'Naan', quantity: 2, price: 60 }
+                ],
+                total: 470,
+                time: new Date(Date.now() - 5 * 60000), // 5 minutes ago
+                customer: 'John Doe',
+                phone: '+91 98765 43210',
+                specialInstructions: 'Extra spicy'
+            },
+            {
+                id: 'ORD002',
+                table: 'Table 3',
+                status: 'preparing',
+                items: [
+                    { name: 'Paneer Tikka', quantity: 1, price: 250 },
+                    { name: 'Jeera Rice', quantity: 1, price: 150 }
+                ],
+                total: 400,
+                time: new Date(Date.now() - 15 * 60000), // 15 minutes ago
+                customer: 'Jane Smith',
+                phone: '+91 98765 43211',
+                specialInstructions: 'No onions'
+            },
+            {
+                id: 'ORD003',
+                table: 'Table 8',
+                status: 'ready',
+                items: [
+                    { name: 'Veg Biryani', quantity: 2, price: 280 },
+                    { name: 'Raita', quantity: 1, price: 50 }
+                ],
+                total: 610,
+                time: new Date(Date.now() - 25 * 60000), // 25 minutes ago
+                customer: 'Mike Johnson',
+                phone: '+91 98765 43212',
+                specialInstructions: ''
+            },
+            {
+                id: 'ORD004',
+                table: 'Table 2',
+                status: 'completed',
+                items: [
+                    { name: 'Masala Dosa', quantity: 1, price: 120 },
+                    { name: 'Coffee', quantity: 2, price: 60 }
+                ],
+                total: 240,
+                time: new Date(Date.now() - 45 * 60000), // 45 minutes ago
+                customer: 'Sarah Williams',
+                phone: '+91 98765 43213',
+                specialInstructions: ''
+            },
+            {
+                id: 'ORD005',
+                table: 'Table 6',
+                status: 'pending',
+                items: [
+                    { name: 'Chicken Biryani', quantity: 1, price: 320 },
+                    { name: 'Coke', quantity: 1, price: 60 }
+                ],
+                total: 380,
+                time: new Date(Date.now() - 2 * 60000), // 2 minutes ago
+                customer: 'David Brown',
+                phone: '+91 98765 43214',
+                specialInstructions: 'Less spicy'
+            }
+        ];
+
+        // Render orders
+        function renderOrders(ordersToShow = orders) {
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = ordersToShow.map(order => `
+                <div class="order-card" data-id="${order.id}" data-status="${order.status}">
+                    <div class="order-header">
+                        <div class="order-id">${order.id}</div>
+                        <div class="order-status status-${order.status}">${capitalizeFirstLetter(order.status)}</div>
+                    </div>
+                    <div class="order-content">
+                        <div class="order-meta">
+                            <div><i class="fas fa-user"></i> ${order.customer}</div>
+                            <div><i class="fas fa-phone"></i> ${order.phone}</div>
+                            <div><i class="fas fa-table"></i> ${order.table}</div>
+                            <div class="timer ${getTimerClass(order.time)}">
+                                <i class="fas fa-clock"></i> ${getElapsedTime(order.time)}
+                            </div>
+                        </div>
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <div class="item-details">
+                                        <div class="item-quantity">${item.quantity}</div>
+                                        <div>${item.name}</div>
+                                    </div>
+                                    <div>₹${item.price}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${order.specialInstructions ? `
+                            <div style="color: #ff6b6b; margin-top: 10px; font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> ${order.specialInstructions}
+                            </div>
+                        ` : ''}
+                        <div class="order-total">
+                            <div>Total</div>
+                            <div>₹${order.total}</div>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        ${getActionButtons(order.status, order.id)}
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners to buttons
+            document.querySelectorAll('.order-action-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order-id');
+                    const action = this.getAttribute('data-action');
+                    handleOrderAction(orderId, action);
+                });
+            });
+        }
+
+        // Get appropriate action buttons based on order status
+        function getActionButtons(status, orderId) {
+            switch(status) {
+                case 'pending':
+                    return `
+                        <button class="btn btn-primary order-action-btn" data-order-id="${orderId}" data-action="prepare">
+                            <i class="fas fa-fire"></i> Start Preparing
+                        </button>
+                        <button class="btn btn-secondary order-action-btn" data-order-id="${orderId}" data-action="cancel">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    `;
+                case 'preparing':
+                    return `
+                        <button class="btn btn-success order-action-btn" data-order-id="${orderId}" data-action="ready">
+                            <i class="fas fa-check"></i> Mark Ready
+                        </button>
+                    `;
+                case 'ready':
+                    return `
+                        <button class="btn btn-success order-action-btn" data-order-id="${orderId}" data-action="complete">
+                            <i class="fas fa-check-double"></i> Complete Order
+                        </button>
+                    `;
+                case 'completed':
+                    return `
+                        <button class="btn btn-secondary order-action-btn" data-order-id="${orderId}" data-action="print">
+                            <i class="fas fa-print"></i> Print Receipt
+                        </button>
+                    `;
+                default:
+                    return '';
+            }
+        }
+
+        // Handle order actions
+        function handleOrderAction(orderId, action) {
+            const orderIndex = orders.findIndex(order => order.id === orderId);
+            if (orderIndex === -1) return;
+
+            switch(action) {
+                case 'prepare':
+                    orders[orderIndex].status = 'preparing';
+                    showNotification('Order Update', `Order ${orderId} is now being prepared.`);
+                    break;
+                case 'ready':
+                    orders[orderIndex].status = 'ready';
+                    showNotification('Order Ready', `Order ${orderId} is now ready for pickup.`);
+                    break;
+                case 'complete':
+                    orders[orderIndex].status = 'completed';
+                    showNotification('Order Completed', `Order ${orderId} has been completed.`);
+                    break;
+                case 'cancel':
+                    if (confirm(`Are you sure you want to cancel order ${orderId}?`)) {
+                        orders.splice(orderIndex, 1);
+                        showNotification('Order Cancelled', `Order ${orderId} has been cancelled.`);
+                    }
+                    break;
+                case 'print':
+                    showNotification('Printing Receipt', `Printing receipt for order ${orderId}.`);
+                    break;
+            }
+
+            renderOrders();
+        }
+
+        // Get timer class based on elapsed time
+        function getTimerClass(time) {
+            const elapsed = Date.now() - time;
+            const minutes = Math.floor(elapsed / 60000);
+            
+            if (minutes > 30) return 'urgent';
+            if (minutes > 15) return 'warning';
+            return 'normal';
+        }
+
+        // Get elapsed time in a readable format
+        function getElapsedTime(time) {
+            const elapsed = Date.now() - time;
+            const minutes = Math.floor(elapsed / 60000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes === 1) return '1 minute ago';
+            return `${minutes} minutes ago`;
+        }
+
+        // Search orders
+        function searchOrders(query) {
+            if (!query) {
+                renderOrders();
+                return;
+            }
+            
+            const searchQuery = query.toLowerCase();
+            const filtered = orders.filter(order => 
+                order.id.toLowerCase().includes(searchQuery) ||
+                order.customer.toLowerCase().includes(searchQuery) ||
+                order.items.some(item => item.name.toLowerCase().includes(searchQuery))
+            );
+            
+            renderOrders(filtered);
+        }
+
+        // Filter orders
+        function filterOrders(type, value) {
+            if (value === 'all') {
+                renderOrders();
+                return;
+            }
+            
+            let filtered = [...orders];
+            
+            if (type === 'status') {
+                filtered = filtered.filter(order => order.status === value);
+            } else if (type === 'date') {
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                switch(value) {
+                    case 'today':
+                        filtered = filtered.filter(order => order.time >= today);
+                        break;
+                    case 'week':
+                        const weekStart = new Date(today);
+                        weekStart.setDate(today.getDate() - today.getDay());
+                        filtered = filtered.filter(order => order.time >= weekStart);
+                        break;
+                    case 'month':
+                        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                        filtered = filtered.filter(order => order.time >= monthStart);
+                        break;
+                }
+            }
+            
+            renderOrders(filtered);
+        }
+
+        // Show notification
+        function showNotification(title, message) {
+            const notification = document.getElementById('notification');
+            notification.querySelector('.notification-title').textContent = title;
+            notification.querySelector('.notification-message').textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Helper function to capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrders();
+            
+            // Update order times periodically
+            setInterval(() => {
+                renderOrders();
+            }, 60000); // Every minute
+            
+            // Notification bell click
+            document.querySelector('.notification-bell').addEventListener('click', function() {
+                alert('You have 3 new orders waiting to be processed.');
+            });
+        });
+    </script>
+</body>
+</html> 

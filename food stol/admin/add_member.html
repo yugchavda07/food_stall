@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management - Food Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Toast Notification Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <style>
+        /* Staff Management Page Styles */
+        .page-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .member-form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .members-list-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-header {
+            margin-bottom: 25px;
+        }
+        
+        .form-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-col {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .role-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .role-option {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .role-option input[type="radio"] {
+            display: none;
+        }
+        
+        .role-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .role-option input[type="radio"]:checked + label {
+            border-color: var(--primary-color);
+            background-color: rgba(79, 70, 229, 0.05);
+            color: var(--primary-color);
+        }
+        
+        .role-option i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn-cancel {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            background: var(--light-color);
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-save {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-save:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+        
+        .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        
+        .list-header {
+            background: var(--light-color);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .list-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-container input {
+            padding: 10px 15px 10px 35px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            width: 250px;
+        }
+        
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            flex: 1;
+        }
+        
+        .members-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .members-table th,
+        .members-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .members-table th {
+            font-weight: 600;
+            color: var(--dark-color);
+            background-color: #f8fafc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .members-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .member-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-edit {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .btn-delete {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .btn-edit:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            font-size: 0.85rem;
+        }
+        
+        .no-members {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--gray-color);
+        }
+        
+        .no-members i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .page-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .list-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .search-container input {
+                width: 100%;
+            }
+            
+            .member-form-container,
+            .members-list-container {
+                padding: 20px;
+            }
+            
+            .role-options {
+                flex-direction: column;
+            }
+            
+            .role-option {
+                width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-cancel, .btn-save {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Staff Management</h1>
+        </div>
+        
+        <div class="page-container">
+            <div class="member-form-container">
+                <div class="form-header">
+                    <h2>Add Staff Member</h2>
+                    <p>Create a new staff member account for your restaurant</p>
+                </div>
+                
+                <form id="memberForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="memberFullname">Full Name</label>
+                                <div class="input-group">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="memberFullname" name="fullname" placeholder="Enter full name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="memberEmail">Email Address</label>
+                                <div class="input-group">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" id="memberEmail" name="email" placeholder="Enter email address" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="memberPhone">Phone Number</label>
+                                <div class="input-group">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" id="memberPhone" name="phone" placeholder="Enter phone number" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="memberId">Member ID</label>
+                                <div class="input-group">
+                                    <i class="fas fa-id-card"></i>
+                                    <input type="text" id="memberId" name="memberId" placeholder="Create unique member ID" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="memberPassword">Password</label>
+                                <div class="input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="memberPassword" name="password" placeholder="Create password" required>
+                                    <span class="password-toggle" onclick="togglePassword('memberPassword')">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                                <div class="input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                                    <span class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <label class="form-label">Select Role</label>
+                    <div class="role-options">
+                        <div class="role-option">
+                            <input type="radio" id="roleManager" name="role" value="manager" checked>
+                            <label for="roleManager">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Manager</span>
+                            </label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" id="roleChef" name="role" value="chef">
+                            <label for="roleChef">
+                                <i class="fas fa-utensils"></i>
+                                <span>Chef</span>
+                            </label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" id="roleWaiter" name="role" value="waiter">
+                            <label for="roleWaiter">
+                                <i class="fas fa-concierge-bell"></i>
+                                <span>Waiter</span>
+                            </label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" id="roleCashier" name="role" value="cashier">
+                            <label for="roleCashier">
+                                <i class="fas fa-cash-register"></i>
+                                <span>Cashier</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="memberNotes">Additional Notes</label>
+                        <div class="input-group">
+                            <textarea id="memberNotes" name="notes" placeholder="Enter any additional notes about this staff member"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" class="btn-cancel">Cancel</button>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-user-plus"></i> Add Member
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="members-list-container">
+                <div class="list-header">
+                    <h3>Current Staff Members</h3>
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchMembers" placeholder="Search members...">
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="members-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Member ID</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody">
+                            <!-- Table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Load the sidebar
+        fetch('asidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading sidebar:', error));
+            
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // Initialize members from localStorage or use sample data
+        let storeMembers = JSON.parse(localStorage.getItem('storeMembers')) || [
+            {
+                id: 1,
+                fullname: "John Doe",
+                email: "john@example.com",
+                phone: "+91 9876543210",
+                memberId: "MANAGER01",
+                role: "manager",
+                status: "active",
+                notes: "Head manager for evening shift",
+                dateAdded: "2023-08-15"
+            },
+            {
+                id: 2,
+                fullname: "Priya Sharma",
+                email: "priya@example.com",
+                phone: "+91 8765432109",
+                memberId: "CHEF01",
+                role: "chef",
+                status: "active",
+                notes: "Specializes in North Indian cuisine",
+                dateAdded: "2023-10-20"
+            },
+            {
+                id: 3,
+                fullname: "Rahul Kumar",
+                email: "rahul@example.com",
+                phone: "+91 7654321098",
+                memberId: "WAITER01",
+                role: "waiter",
+                status: "inactive",
+                notes: "Part-time staff, available weekends",
+                dateAdded: "2024-01-05"
+            }
+        ];
+        
+        // DOM Elements
+        const memberForm = document.getElementById('memberForm');
+        const membersTableBody = document.getElementById('membersTableBody');
+        const searchInput = document.getElementById('searchMembers');
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMembersTable();
+            setupEventListeners();
+        });
+        
+        // Event Listeners
+        function setupEventListeners() {
+            // Form submission
+            memberForm.addEventListener('submit', handleFormSubmit);
+            
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                renderMembersTable(
+                    storeMembers.filter(member => 
+                        member.fullname.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+                        member.memberId.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+                        member.role.toLowerCase().includes(searchInput.value.toLowerCase())
+                    )
+                );
+            });
+            
+            // Cancel button
+            document.querySelector('.btn-cancel').addEventListener('click', () => {
+                memberForm.reset();
+            });
+        }
+        
+        // Render members table
+        function renderMembersTable(members = storeMembers) {
+            membersTableBody.innerHTML = '';
+            
+            if (members.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="6">
+                        <div class="no-members">
+                            <i class="fas fa-users"></i>
+                            <p>No staff members found</p>
+                        </div>
+                    </td>
+                `;
+                membersTableBody.appendChild(emptyRow);
+                return;
+            }
+            
+            members.forEach(member => {
+                const row = document.createElement('tr');
+                
+                const roleIcon = getRoleIcon(member.role);
+                const statusClass = member.status === 'active' ? 'status-active' : 'status-inactive';
+                
+                row.innerHTML = `
+                    <td>${member.fullname}</td>
+                    <td>${member.memberId}</td>
+                    <td>
+                        <span class="role-badge">${roleIcon} ${capitalizeFirst(member.role)}</span>
+                    </td>
+                    <td>${member.email}</td>
+                    <td>
+                        <span class="status-indicator ${statusClass}">
+                            <i class="fas fa-circle" style="font-size: 0.6rem;"></i>
+                            ${capitalizeFirst(member.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="member-actions">
+                            <button class="btn-action btn-edit" onclick="editMember(${member.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteMember(${member.id})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                membersTableBody.appendChild(row);
+            });
+        }
+        
+        // Get role icon
+        function getRoleIcon(role) {
+            switch(role) {
+                case 'manager':
+                    return '<i class="fas fa-user-tie"></i>';
+                case 'chef':
+                    return '<i class="fas fa-utensils"></i>';
+                case 'waiter':
+                    return '<i class="fas fa-concierge-bell"></i>';
+                case 'cashier':
+                    return '<i class="fas fa-cash-register"></i>';
+                default:
+                    return '<i class="fas fa-user"></i>';
+            }
+        }
+        
+        // Capitalize first letter
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+        
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const fullname = document.getElementById('memberFullname').value;
+            const email = document.getElementById('memberEmail').value;
+            const phone = document.getElementById('memberPhone').value;
+            const memberId = document.getElementById('memberId').value;
+            const password = document.getElementById('memberPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const notes = document.getElementById('memberNotes').value;
+            
+            // Basic validation
+            if (password !== confirmPassword) {
+                showNotification("Passwords don't match", 'error');
+                return;
+            }
+            
+            // Check if member ID already exists
+            if (storeMembers.some(member => member.memberId === memberId)) {
+                showNotification("Member ID already exists", 'error');
+                return;
+            }
+            
+            // Create new member object
+            const newMember = {
+                id: Date.now(),
+                fullname,
+                email,
+                phone,
+                memberId,
+                password, // In a real app, this should be hashed
+                role,
+                status: 'active',
+                notes,
+                dateAdded: new Date().toISOString().split('T')[0]
+            };
+            
+            // Add to members array
+            storeMembers.push(newMember);
+            
+            // Save to localStorage
+            localStorage.setItem('storeMembers', JSON.stringify(storeMembers));
+            
+            // Show success notification
+            showNotification(`${fullname} has been added as a ${role}`, 'success');
+            
+            // Reset form
+            memberForm.reset();
+            
+            // Refresh table
+            renderMembersTable();
+        }
+        
+        // Edit member
+        function editMember(id) {
+            const member = storeMembers.find(m => m.id === id);
+            if (!member) return;
+            
+            // In a real app, you would populate a form or modal for editing
+            // For now, just toggle the member's status
+            member.status = member.status === 'active' ? 'inactive' : 'active';
+            
+            // Save to localStorage
+            localStorage.setItem('storeMembers', JSON.stringify(storeMembers));
+            
+            // Show notification
+            showNotification(`${member.fullname}'s status updated to ${member.status}`, 'info');
+            
+            // Refresh table
+            renderMembersTable();
+        }
+        
+        // Delete member
+        function deleteMember(id) {
+            const member = storeMembers.find(m => m.id === id);
+            if (!member) return;
+            
+            if (confirm(`Are you sure you want to delete ${member.fullname}?`)) {
+                // Remove from array
+                storeMembers = storeMembers.filter(m => m.id !== id);
+                
+                // Save to localStorage
+                localStorage.setItem('storeMembers', JSON.stringify(storeMembers));
+                
+                // Show notification
+                showNotification(`${member.fullname} has been removed`, 'error');
+                
+                // Refresh table
+                renderMembersTable();
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom",
+                position: "right",
+                backgroundColor: type === 'success' ? "#10B981" : 
+                                type === 'error' ? "#EF4444" : "#3B82F6",
+                className: "toast-notification",
+                stopOnFocus: true
+            }).showToast();
+        }
+    </script>
+</body>
+</html> 

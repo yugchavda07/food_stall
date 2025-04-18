@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Member Login</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="welcome-section">
+            <h1>Store Member Login</h1>
+            <p>Access your store account</p>
+        </div>
+
+        <div class="login-card">
+            <div class="card-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <form method="POST" action="{{ url_for('store_member_login') }}">
+                <div class="input-group">
+                    <i class="fas fa-store"></i>
+                    <input type="text" name="store_name" placeholder="Store Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" name="member_id" placeholder="Member ID" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="member_email" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="remember-forgot">
+                    <label>
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="../login_details/forgot_password.html" class="forgot-link">Forgot Password?</a>
+                </div>
+                <button type="submit" class="login-btn" onclick="window.location.href='../Admin/dashboard.html'; return false;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <div class="back-to-user">
+                    <a href="login.html">
+                        <i class="fas fa-arrow-left"></i> Back to User Login
+                    </a>
+                </div>
+                <div class="dashboard-link">
+                    <a href="/dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

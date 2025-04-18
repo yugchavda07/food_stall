@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - Food Store</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <div class="welcome-section">
+            <div class="welcome-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1>Create Account</h1>
+            <p>Join our food community</p>
+        </div>
+
+        <div class="registration-card">
+            <form id="registrationForm" method="POST" action="{{ url_for('user_registration') }}">
+                <!-- Step 1: Basic Information -->
+                <div class="form-step" id="step1">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="full_name" placeholder="Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+                        <span class="toggle-password" id="togglePassword">
+                            <i class="fas fa-eye-slash"></i>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm Password" required>
+                    </div>
+                    <div class="password-requirements">
+                        <p>Password must contain:</p>
+                        <ul>
+                            <li id="length">At least 8 characters</li>
+                            <li id="uppercase">One uppercase letter</li>
+                            <li id="lowercase">One lowercase letter</li>
+                            <li id="number">One number</li>
+                            <li id="special">One special character</li>
+                        </ul>
+                    </div>
+                    <button type="button" class="next-btn" onclick="nextStep(1)">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Step 2: Phone Verification -->
+                <div class="form-step" id="step2" style="display: none;">
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" name="phone" id="phone" placeholder="Phone Number" required>
+                    </div>
+                    <div class="otp-section" style="display: none;">
+                        <div class="input-group">
+                            <i class="fas fa-key"></i>
+                            <input type="text" name="otp" id="otp" placeholder="Enter OTP" maxlength="6">
+                        </div>
+                        <div class="otp-timer">
+                            <span id="otpTimer">Resend OTP in: 60s</span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="back-btn" onclick="prevStep(2)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="send-otp-btn" id="sendOtpBtn" onclick="sendOTP()">
+                            Send OTP <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button type="button" class="verify-btn" id="verifyBtn" onclick="verifyOTP()" style="display: none;">
+                            Verify OTP <i class="fas fa-check"></i>
+                        </button>
+                        <button type="button" class="submit-btn" id="submitBtn" style="display: none;" onclick="window.location.href='../user/home.html'">
+                            Create Account <i class="fas fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="back-to-user">
+                <a href="login.html">
+                    <i class="fas fa-arrow-left"></i> Back to Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password validation
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const togglePassword = document.getElementById('togglePassword');
+
+        // Password requirements
+        const requirements = {
+            length: /.{8,}/,
+            uppercase: /[A-Z]/,
+            lowercase: /[a-z]/,
+            number: /[0-9]/,
+            special: /[!@#$%^&*(),.?":{}|<>]/
+        };
+
+        password.addEventListener('input', function() {
+            Object.keys(requirements).forEach(req => {
+                const element = document.getElementById(req);
+                if (requirements[req].test(this.value)) {
+                    element.classList.add('valid');
+                } else {
+                    element.classList.remove('valid');
+                }
+            });
+        });
+
+        // Toggle password visibility
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            confirmPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form navigation
+        function nextStep(currentStep) {
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            document.getElementById(`step${currentStep + 1}`).style.display = 'block';
+        }
+
+        function prevStep(currentStep) {
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            document.getElementById(`step${currentStep - 1}`).style.display = 'block';
+        }
+
+        // OTP functionality
+        let otpTimer;
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const otpSection = document.querySelector('.otp-section');
+        const otpTimerElement = document.getElementById('otpTimer');
+
+        function startOTPTimer() {
+            let timeLeft = 60;
+            otpTimerElement.style.display = 'block';
+            
+            otpTimer = setInterval(() => {
+                timeLeft--;
+                otpTimerElement.textContent = `Resend OTP in: ${timeLeft}s`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    otpTimerElement.style.display = 'none';
+                    sendOtpBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function sendOTP() {
+            const phone = document.getElementById('phone').value;
+            if (!phone) {
+                alert('Please enter a phone number');
+                return;
+            }
+
+            // Here you would typically make an API call to send OTP
+            // For demo purposes, we'll just show the OTP section
+            otpSection.style.display = 'block';
+            sendOtpBtn.style.display = 'none';
+            verifyBtn.style.display = 'block';
+            startOTPTimer();
+        }
+
+        function verifyOTP() {
+            const otp = document.getElementById('otp').value;
+            if (!otp) {
+                alert('Please enter the OTP');
+                return;
+            }
+
+            // Here you would typically verify the OTP with your backend
+            // For demo purposes, we'll just show the submit button
+            verifyBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+        }
+    </script>
+</body>
+</html> 

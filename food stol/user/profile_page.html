@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Stall - Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #f97316;
+            --border-color: #e2e8f0;
+        }
+
+        html[data-theme='light'] {
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --input-bg: #f8fafc;
+            --shadow-color: rgba(0,0,0,0.05);
+        }
+
+        html[data-theme='dark'] {
+            --background-color: #1a1a2e;
+            --text-color: #e2e8f0;
+            --card-bg: #262640;
+            --input-bg: #1f1f38;
+            --shadow-color: rgba(0,0,0,0.2);
+        }
+
+        html {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        html::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 0.75rem 1rem;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            margin-top: 75px;
+            padding: 1.5rem 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .edit-profile-btn {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        .edit-profile-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background: #1d4ed8;
+        }
+        
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .avatar-upload:hover {
+            background: var(--primary-color);
+        }
+        
+        .avatar-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .avatar-popup.active {
+            display: flex;
+        }
+        
+        .avatar-popup-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        .avatar-popup-content::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .avatar-popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .avatar-popup-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .avatar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .avatar-tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .avatar-tab.active {
+            opacity: 1;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .avatar-tab-content {
+            display: none;
+        }
+        
+        .avatar-tab-content.active {
+            display: block;
+        }
+        
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .avatar-item {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .avatar-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .avatar-item.selected {
+            border: 2px solid var(--primary-color);
+        }
+        
+        .camera-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .camera-option {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 12px;
+            background: var(--input-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .camera-option:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .camera-option i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .hidden-input {
+            display: none;
+        }
+
+        .profile-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #64748b;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .section-title i {
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--input-bg);
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            background: var(--input-bg);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .order-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .order-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .order-date {
+            width: 80px;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .order-details {
+            flex: 1;
+        }
+
+        .order-shop{
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-id{
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .order-price {
+            font-weight: 600;
+            margin-left: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 1rem;
+            white-space: nowrap;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+            transform: translateX(-3px);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .theme-toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .theme-icon {
+            margin: 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .order-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-popup.active {
+            display: flex;
+        }
+
+        .order-popup-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        .order-popup-content::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .order-popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .order-popup-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .order-info-row {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .order-info-label {
+            width: 150px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .order-info-value {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .order-items-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-item-name {
+            flex: 1;
+        }
+
+        .order-item-quantity {
+            margin: 0 1rem;
+            color: #64748b;
+        }
+
+        .order-item-price {
+            font-weight: 500;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .order-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            padding: 0.75rem 0;
+            margin-top: 1rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .invoice-btn {
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .profile-card, .section {
+                padding: 1.5rem;
+            }
+            
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Food Stall</div>
+        <a href="home2.html" style="color: var(--text-color); text-decoration: none;">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+        </a>
+    </header>
+
+    <main class="main-content">
+        <div class="navigation">
+            <a href="home.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-avatar" id="profileAvatar">
+                <i class="fas fa-user" id="avatarIcon"></i>
+                <img src="" id="avatarImage" style="display: none;">
+            </div>
+            <h1 class="profile-name">John Doe</h1>
+            <p class="profile-email">john.doe@example.com</p>
+            <div class="edit-profile-btn" id="editProfileBtn">
+                <i class="fas fa-pencil-alt"></i>
+            </div>
+        </div>
+
+        <div class="avatar-popup" id="avatarPopup">
+            <div class="avatar-popup-content">
+                <button class="avatar-popup-close" id="avatarPopupClose">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="avatar-popup-title">Edit Profile</h2>
+                
+                <div class="avatar-tabs">
+                    <div class="avatar-tab active" data-tab="profile">Personal Info</div>
+                    <div class="avatar-tab" data-tab="avatar">Profile Picture</div>
+                </div>
+                
+                <div class="avatar-tab-content active" data-tab="profile">
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" value="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" value="john.doe@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" value="+91 98765 43210">
+                        </div>
+                        <div>
+                            <a href="../login_details/forgot_password.html" class="forgot-password">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="avatar-tab-content" data-tab="avatar">
+                    <div class="camera-options">
+                        <div class="camera-option" id="cameraOption">
+                            <i class="fas fa-camera"></i>
+                            <span>Camera</span>
+                        </div>
+                        <div class="camera-option" id="galleryOption">
+                            <i class="fas fa-images"></i>
+                            <span>Gallery</span>
+                        </div>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" class="hidden-input">
+                    
+                    <h3 style="margin: 1.5rem 0 1rem; font-weight: 600; color: var(--primary-color);">Food Emojis</h3>
+                    <div class="avatar-grid">
+                        <div class="avatar-item" data-emoji="🍔"><span>🍔</span></div>
+                        <div class="avatar-item" data-emoji="🍕"><span>🍕</span></div>
+                        <div class="avatar-item" data-emoji="🍦"><span>🍦</span></div>
+                        <div class="avatar-item" data-emoji="🍩"><span>🍩</span></div>
+                        <div class="avatar-item" data-emoji="🌮"><span>🌮</span></div>
+                        <div class="avatar-item" data-emoji="🍣"><span>🍣</span></div>
+                        <div class="avatar-item" data-emoji="🍜"><span>🍜</span></div>
+                        <div class="avatar-item" data-emoji="🍗"><span>🍗</span></div>
+                    </div>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem; font-weight: 600; color: var(--primary-color);">Animal Emojis</h3>
+                    <div class="avatar-grid">
+                        <div class="avatar-item" data-emoji="🐱"><span>🐱</span></div>
+                        <div class="avatar-item" data-emoji="🐶"><span>🐶</span></div>
+                        <div class="avatar-item" data-emoji="🦊"><span>🦊</span></div>
+                        <div class="avatar-item" data-emoji="🐼"><span>🐼</span></div>
+                        <div class="avatar-item" data-emoji="🐨"><span>🐨</span></div>
+                        <div class="avatar-item" data-emoji="🦁"><span>🦁</span></div>
+                        <div class="avatar-item" data-emoji="🐯"><span>🐯</span></div>
+                        <div class="avatar-item" data-emoji="🦄"><span>🦄</span></div>
+                    </div>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem; font-weight: 600; color: var(--primary-color);">Cartoon Avatars</h3>
+                    <div class="avatar-grid">
+                        <div class="avatar-item" data-cartoon="doraemon">
+                            <img src="https://i.pinimg.com/736x/d5/87/95/d58795dfaf5d9201093098a2e9086602.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div class="avatar-item" data-cartoon="shinchan">
+                            <img src="https://e1.pxfuel.com/desktop-wallpaper/21/975/desktop-wallpaper-shin-chan-iphone-crayon-shin-chan.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div class="avatar-item" data-cartoon="spiderman">
+                            <img src="https://i.pinimg.com/474x/c5/8e/13/c58e13d58a1f99587c17a0d5fa878532.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div class="avatar-item" data-cartoon="ironman">
+                            <img src="https://i.pinimg.com/736x/a5/ef/61/a5ef61bcb510b536156e93fab83b14e8.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelAvatarBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveAvatarBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-history"></i> Order History</h2>
+            <div class="order-item" data-order="FD8723">
+                <div class="order-date">Today<br>12:30 PM</div>
+                <div class="order-details">
+                    <div class="order-shop">Taj Indian Restaurant</div>
+                    <div class="order-id">Order #FD8723</div>
+                </div>
+                <div class="order-price">₹550</div>
+            </div>
+            <div class="order-item" data-order="FD8705">
+                <div class="order-date">Yesterday<br>7:45 PM</div>
+                <div class="order-details">
+                    <div class="order-shop">Dosa Palace</div>
+                    <div class="order-id">Order #FD8705</div>
+                </div>
+                <div class="order-price">₹200</div>
+            </div>
+            <div class="order-item" data-order="FD8690">
+                <div class="order-date">24 May<br>1:20 PM</div>
+                <div class="order-details">
+                    <div class="order-shop">Punjab Grill</div>
+                    <div class="order-id">Order #FD8690</div>
+                </div>
+                <div class="order-price">₹350</div>
+            </div>
+        </div>
+
+        <div class="order-popup" id="orderPopup">
+            <div class="order-popup-content">
+                <button class="order-popup-close" id="orderPopupClose">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="order-popup-title">Order Details</h2>
+                
+                <div class="order-info">
+                    <div class="order-info-row">
+                        <div class="order-info-label">Order Number:</div>
+                        <div class="order-info-value" id="popupOrderId">FD8723</div>
+                    </div>
+                    <div class="order-info-row">
+                        <div class="order-info-label">Date & Time:</div>
+                        <div class="order-info-value" id="popupOrderDate">Today, 12:30 PM</div>
+                    </div>
+                    <div class="order-info-row">
+                        <div class="order-info-label">Restaurant:</div>
+                        <div class="order-info-value" id="popupOrderShop">Taj Indian Restaurant</div>
+                    </div>
+                    <div class="order-info-row">
+                        <div class="order-info-label">Status:</div>
+                        <div class="order-info-value" id="popupOrderStatus">Completed</div>
+                    </div>
+                    <div class="order-info-row">
+                        <div class="order-info-label">Payment Method:</div>
+                        <div class="order-info-value" id="popupPaymentMethod">UPI</div>
+                    </div>
+                    <div class="order-info-row" id="upiTransactionRow">
+                        <div class="order-info-label">UPI Transaction ID:</div>
+                        <div class="order-info-value" id="popupUpiId">UPI123456789</div>
+                    </div>
+                    <div class="order-info-row" id="tableNumberRow" style="display: none;">
+                        <div class="order-info-label">Table Number:</div>
+                        <div class="order-info-value" id="popupTableNumber">-</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 1.5rem 0 1rem; font-weight: 600; color: var(--primary-color);">Order Items</h3>
+                <div class="order-items-list" id="orderItemsList">
+                    <!-- Item rows will be populated dynamically -->
+                </div>
+                
+                <div class="order-total-section">
+                    <div class="order-item-row">
+                        <div class="order-item-name">Subtotal</div>
+                        <div class="order-item-price" id="popupSubtotal">₹500</div>
+                    </div>
+                    <div class="order-item-row">
+                        <div class="order-item-name">GST (5%)</div>
+                        <div class="order-item-price" id="popupTax">₹25</div>
+                    </div>
+                    <div class="order-item-row">
+                        <div class="order-item-name">Delivery Fee</div>
+                        <div class="order-item-price" id="popupDeliveryFee">₹25</div>
+                    </div>
+                    <div class="order-total-row">
+                        <div>Total</div>
+                        <div id="popupTotal">₹550</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary invoice-btn">
+                    <i class="fas fa-file-invoice"></i> Download Invoice
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-cog"></i> Account Settings</h2>
+            
+            <div class="settings-row">
+                <div class="settings-label">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-row">
+                <div class="settings-label">
+                    <i class="fas fa-bell"></i> Notifications
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="notificationToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <button type="button" class="btn btn-outline" style="color: #ef4444;">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize theme
+            const themeToggle = document.getElementById('themeToggle');
+            
+            // Check if user has previously set a theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'dark') {
+                    themeToggle.checked = true;
+                }
+            }
+            
+            // Theme toggle functionality
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    applyThemeToAllPages('dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                    applyThemeToAllPages('light');
+                }
+            });
+            
+            // Function to apply theme to all pages
+            function applyThemeToAllPages(theme) {
+                // This setting will be applied to all pages that check localStorage
+                localStorage.setItem('theme', theme);
+            }
+            
+            // Avatar popup functionality
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const avatarPopup = document.getElementById('avatarPopup');
+            const avatarPopupClose = document.getElementById('avatarPopupClose');
+            const avatarTabs = document.querySelectorAll('.avatar-tab');
+            const avatarTabContents = document.querySelectorAll('.avatar-tab-content');
+            const avatarItems = document.querySelectorAll('.avatar-item');
+            const cameraOption = document.getElementById('cameraOption');
+            const galleryOption = document.getElementById('galleryOption');
+            const photoInput = document.getElementById('photoInput');
+            const saveAvatarBtn = document.getElementById('saveAvatarBtn');
+            const cancelAvatarBtn = document.getElementById('cancelAvatarBtn');
+            const profileAvatar = document.getElementById('profileAvatar');
+            const avatarIcon = document.getElementById('avatarIcon');
+            const avatarImage = document.getElementById('avatarImage');
+            
+            let selectedAvatar = null;
+            let tempAvatarSrc = null;
+            
+            // Load user data from localStorage if available
+            const savedUserData = localStorage.getItem('userData');
+            if (savedUserData) {
+                try {
+                    const user = JSON.parse(savedUserData);
+                    document.querySelector('.profile-name').textContent = user.name || 'User';
+                    document.querySelector('.profile-email').textContent = user.email || '';
+                    
+                    // Fill form fields
+                    document.getElementById('fullName').value = user.name || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('phone').value = user.phone || '';
+                } catch (e) {
+                    console.error('Error loading user data:', e);
+                }
+            }
+            
+            // Load avatar from localStorage if available
+            const savedAvatar = localStorage.getItem('userAvatar');
+            if (savedAvatar) {
+                try {
+                    const avatarData = JSON.parse(savedAvatar);
+                    if (avatarData.type === 'image') {
+                        avatarIcon.style.display = 'none';
+                        avatarImage.src = avatarData.src;
+                        avatarImage.style.display = 'block';
+                    } else if (avatarData.type === 'emoji') {
+                        avatarIcon.className = '';
+                        avatarIcon.textContent = avatarData.value;
+                    } else if (avatarData.type === 'cartoon') {
+                        avatarIcon.style.display = 'none';
+                        avatarImage.src = avatarData.src;
+                        avatarImage.style.display = 'block';
+                    }
+                } catch (e) {
+                    console.error('Error loading avatar:', e);
+                }
+            }
+            
+            // Open avatar popup
+            editProfileBtn.addEventListener('click', function() {
+                avatarPopup.classList.add('active');
+            });
+            
+            // Close avatar popup
+            avatarPopupClose.addEventListener('click', function() {
+                avatarPopup.classList.remove('active');
+            });
+            
+            cancelAvatarBtn.addEventListener('click', function() {
+                avatarPopup.classList.remove('active');
+                clearSelection();
+            });
+            
+            // Tab switching
+            avatarTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    avatarTabs.forEach(t => t.classList.remove('active'));
+                    avatarTabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    this.classList.add('active');
+                    document.querySelector(`.avatar-tab-content[data-tab="${tabId}"]`).classList.add('active');
+                    
+                    clearSelection();
+                });
+            });
+            
+            // Clear selection
+            function clearSelection() {
+                avatarItems.forEach(item => item.classList.remove('selected'));
+                selectedAvatar = null;
+            }
+            
+            // Select emoji or cartoon avatar
+            avatarItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Clear previous selection
+                    avatarItems.forEach(i => i.classList.remove('selected'));
+                    
+                    // Select current item
+                    this.classList.add('selected');
+                    
+                    const emoji = this.getAttribute('data-emoji');
+                    const cartoon = this.getAttribute('data-cartoon');
+                    
+                    if (emoji) {
+                        selectedAvatar = {
+                            type: 'emoji',
+                            value: emoji
+                        };
+                    } else if (cartoon) {
+                        const imgSrc = this.querySelector('img').src;
+                        selectedAvatar = {
+                            type: 'cartoon',
+                            value: cartoon,
+                            src: imgSrc
+                        };
+                    }
+                });
+            });
+            
+            // Camera option
+            cameraOption.addEventListener('click', function() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // For mobile devices, try to access camera
+                    photoInput.setAttribute('capture', 'environment');
+                    photoInput.click();
+                } else {
+                    alert('Camera access is not supported by your browser');
+                }
+            });
+            
+            // Gallery option
+            galleryOption.addEventListener('click', function() {
+                photoInput.removeAttribute('capture');
+                photoInput.click();
+            });
+            
+            // Handle file selection
+            photoInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        tempAvatarSrc = event.target.result;
+                        selectedAvatar = {
+                            type: 'image',
+                            src: tempAvatarSrc
+                        };
+                    };
+                    
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            // Save avatar
+            saveAvatarBtn.addEventListener('click', function() {
+                // Handle avatar selection
+                if (selectedAvatar) {
+                    localStorage.setItem('userAvatar', JSON.stringify(selectedAvatar));
+                    
+                    if (selectedAvatar.type === 'emoji') {
+                        avatarIcon.style.display = 'block';
+                        avatarImage.style.display = 'none';
+                        avatarIcon.className = '';
+                        avatarIcon.textContent = selectedAvatar.value;
+                    } else if (selectedAvatar.type === 'image' || selectedAvatar.type === 'cartoon') {
+                        avatarIcon.style.display = 'none';
+                        avatarImage.style.display = 'block';
+                        avatarImage.src = selectedAvatar.src;
+                    }
+                }
+                
+                // Save profile data
+                const userData = {
+                    name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value
+                };
+                
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // Update displayed name and email
+                document.querySelector('.profile-name').textContent = userData.name;
+                document.querySelector('.profile-email').textContent = userData.email;
+                
+                // Close popup
+                avatarPopup.classList.remove('active');
+                clearSelection();
+                
+                // Show success notification
+                alert('Profile updated successfully!');
+            });
+            
+            // Forgot password functionality
+            const forgotPasswordLink = document.querySelector('.forgot-password');
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                alert(`Password reset link will be sent to ${email}`);
+            });
+            
+            // Notification toggle functionality
+            const notificationToggle = document.getElementById('notificationToggle');
+            const savedNotificationPref = localStorage.getItem('notifications');
+            if (savedNotificationPref) {
+                notificationToggle.checked = savedNotificationPref === 'on';
+            }
+            
+            notificationToggle.addEventListener('change', function() {
+                localStorage.setItem('notifications', this.checked ? 'on' : 'off');
+            });
+            
+            // Sign out functionality
+            const signOutBtn = document.querySelector('.btn-outline[style*="color: #ef4444"]');
+            signOutBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to sign out?')) {
+                    // Clear user session
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('cart');
+                    
+                    // Redirect to home page
+                    window.location.href = 'home.html';
+                }
+            });
+            
+            // Order popup functionality
+            const orderItems = document.querySelectorAll('.order-item');
+            const orderPopup = document.getElementById('orderPopup');
+            const orderPopupClose = document.getElementById('orderPopupClose');
+            
+            // Sample order data (in a real app, this would come from a database)
+            const orderData = {
+                'FD8723': {
+                    id: 'FD8723',
+                    date: 'Today, 12:30 PM',
+                    shop: 'Taj Indian Restaurant',
+                    status: 'Completed',
+                    paymentMethod: 'UPI',
+                    upiId: 'UPI123456789',
+                    tableNumber: null,
+                    items: [
+                        { name: 'Butter Chicken', quantity: 1, price: '₹350' },
+                        { name: 'Naan', quantity: 2, price: '₹100' },
+                        { name: 'Mango Lassi', quantity: 1, price: '₹50' }
+                    ],
+                    subtotal: '₹500',
+                    tax: '₹25',
+                    deliveryFee: '₹25',
+                    total: '₹550'
+                },
+                'FD8705': {
+                    id: 'FD8705',
+                    date: 'Yesterday, 7:45 PM',
+                    shop: 'Dosa Palace',
+                    status: 'Completed',
+                    paymentMethod: 'Cash',
+                    upiId: null,
+                    tableNumber: '12',
+                    items: [
+                        { name: 'Masala Dosa', quantity: 1, price: '₹150' },
+                        { name: 'Coffee', quantity: 1, price: '₹40' }
+                    ],
+                    subtotal: '₹190',
+                    tax: '₹10',
+                    deliveryFee: '₹0',
+                    total: '₹200'
+                },
+                'FD8690': {
+                    id: 'FD8690',
+                    date: '24 May 2023, 1:20 PM',
+                    shop: 'Punjab Grill',
+                    status: 'Processing',
+                    paymentMethod: 'Card',
+                    upiId: null,
+                    tableNumber: null,
+                    items: [
+                        { name: 'Paneer Tikka', quantity: 1, price: '₹250' },
+                        { name: 'Garlic Naan', quantity: 2, price: '₹80' },
+                        { name: 'Coke', quantity: 1, price: '₹20' }
+                    ],
+                    subtotal: '₹330',
+                    tax: '₹16.50',
+                    deliveryFee: '₹3.50',
+                    total: '₹350'
+                }
+            };
+            
+            // Open order details popup
+            orderItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order');
+                    const order = orderData[orderId];
+                    
+                    if (order) {
+                        // Populate order details
+                        document.getElementById('popupOrderId').textContent = order.id;
+                        document.getElementById('popupOrderDate').textContent = order.date;
+                        document.getElementById('popupOrderShop').textContent = order.shop;
+                        document.getElementById('popupOrderStatus').textContent = order.status;
+                        document.getElementById('popupPaymentMethod').textContent = order.paymentMethod;
+                        
+                        // Handle UPI transaction ID
+                        const upiRow = document.getElementById('upiTransactionRow');
+                        if (order.paymentMethod === 'UPI' && order.upiId) {
+                            upiRow.style.display = 'flex';
+                            document.getElementById('popupUpiId').textContent = order.upiId;
+                        } else {
+                            upiRow.style.display = 'none';
+                        }
+                        
+                        // Handle table number
+                        const tableRow = document.getElementById('tableNumberRow');
+                        if (order.tableNumber) {
+                            tableRow.style.display = 'flex';
+                            document.getElementById('popupTableNumber').textContent = order.tableNumber;
+                        } else {
+                            tableRow.style.display = 'none';
+                        }
+                        
+                        // Populate order items
+                        const itemsList = document.getElementById('orderItemsList');
+                        itemsList.innerHTML = '';
+                        
+                        order.items.forEach(item => {
+                            const itemRow = document.createElement('div');
+                            itemRow.className = 'order-item-row';
+                            itemRow.innerHTML = `
+                                <div class="order-item-name">${item.name}</div>
+                                <div class="order-item-quantity">x${item.quantity}</div>
+                                <div class="order-item-price">${item.price}</div>
+                            `;
+                            itemsList.appendChild(itemRow);
+                        });
+                        
+                        // Populate totals
+                        document.getElementById('popupSubtotal').textContent = order.subtotal;
+                        document.getElementById('popupTax').textContent = order.tax;
+                        document.getElementById('popupDeliveryFee').textContent = order.deliveryFee;
+                        document.getElementById('popupTotal').textContent = order.total;
+                        
+                        // Show popup
+                        orderPopup.classList.add('active');
+                    }
+                });
+            });
+            
+            // Close order popup
+            orderPopupClose.addEventListener('click', function() {
+                orderPopup.classList.remove('active');
+            });
+            
+            // Close order popup when clicking outside
+            orderPopup.addEventListener('click', function(e) {
+                if (e.target === orderPopup) {
+                    orderPopup.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

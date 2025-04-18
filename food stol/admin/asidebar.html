@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-color: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width, 250px);
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: var(--sidebar-mobile-width, 70px);
+            }
+
+            .sidebar-header h3, 
+            .menu-item span {
+                display: none;
+            }
+
+            .menu-item {
+                padding: 15px;
+                justify-content: center;
+            }
+
+            .menu-item i {
+                margin-right: 0;
+                font-size: 1.5rem;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Food Admin</h3>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item" id="dashboard-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="menu_management.html" class="menu-item" id="menu-link">
+                <i class="fas fa-utensils"></i>
+                <span>Menu Management</span>
+            </a>
+            <a href="generate_qr.html" class="menu-item" id="qr-link">
+                <i class="fas fa-qrcode"></i>
+                <span>Generate QR</span>
+            </a>
+            <a href="orders.html" class="menu-item" id="orders-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="add_member.html" class="menu-item" id="staff-link">
+                <i class="fas fa-user-plus"></i>
+                <span>Staff Management</span>
+            </a>
+            <a href="analytics.html" class="menu-item" id="analytics-link">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="customers.html" class="menu-item" id="customers-link">
+                <i class="fas fa-users"></i>
+                <span>Customers</span>
+            </a>
+            <a href="settings.html" class="menu-item" id="settings-link">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Set active menu item based on current page
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            menuItems.forEach(item => {
+                if (item.getAttribute('href') === currentPage) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Store</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="welcome-section">
+            <h1>Register New Store</h1>
+            <p>Create your store account</p>
+        </div>
+
+        <div class="login-card">
+            <div class="card-icon">
+                <i class="fas fa-store-alt"></i>
+            </div>
+            <form method="POST" action="{{ url_for('register_store') }}" class="registration-form">
+                <div class="form-section">
+                    <h3>Store Information</h3>
+                    <div class="input-group">
+                        <i class="fas fa-store"></i>
+                        <input type="text" name="store_name" placeholder="Store Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" name="address" placeholder="Store Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" name="phone" placeholder="Store Phone Number" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Owner Information</h3>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="owner_name" placeholder="Owner Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" name="owner_phone" placeholder="Owner Phone Number" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Account Security</h3>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+
+                <div class="terms-section">
+                    <label class="checkbox-label">
+                        <input type="checkbox" required>
+                        <span>I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-store-alt"></i> Register Store
+                </button>
+                <div class="back-to-user">
+                    <a href="login.html">
+                        <i class="fas fa-arrow-left"></i> Back to User Login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 
